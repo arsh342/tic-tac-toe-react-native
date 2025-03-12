@@ -90,9 +90,10 @@ export default function Game() {
       <View style={styles.header}>
         <TouchableOpacity 
           onPress={() => router.back()}
-          style={styles.backButton}
+          style={styles.button}
         >
           <ArrowLeft size={24} color="#000" />
+          <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
         
         <View style={styles.scoreContainer}>
@@ -104,10 +105,11 @@ export default function Game() {
         {mode === 'single' && (
           <TouchableOpacity 
             onPress={undoMove}
-            style={styles.undoButton}
+            style={styles.button}
             disabled={isAIThinking}
           >
             <Undo2 size={24} color="#000" />
+            <Text style={styles.buttonText}>Undo</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -130,11 +132,11 @@ export default function Game() {
 
       {winner && (
         <TouchableOpacity 
-          style={styles.resetButton}
+          style={styles.button}
           onPress={resetGame}
         >
           <RotateCcw size={24} color="#000" />
-          <Text style={styles.resetButtonText}>Play Again</Text>
+          <Text style={styles.buttonText}>Play Again</Text>
         </TouchableOpacity>
       )}
     </Animated.View>
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
     padding: 20,
-    paddingTop: 70, // Added padding to move content down
+    paddingTop: 70, // Retained to avoid camera cutout interference
   },
   header: {
     flexDirection: 'row',
@@ -154,23 +156,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  backButton: {
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFE156', // Consistent yellow background
     padding: 10,
-  },
-  undoButton: {
-    padding: 10,
-  },
-  scoreContainer: {
-    backgroundColor: '#FFE156',
-    padding: 10,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 3,
     borderColor: '#000000',
-    transform: [{ rotate: '-1deg' }],
+    gap: 5,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+      },
+      default: {
+        elevation: 4,
+      },
+    }),
     shadowColor: '#000000',
     shadowOffset: {
-      width: 2,
-      height: 2,
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+  },
+  buttonText: {
+    fontFamily: 'SpaceGrotesk-Bold',
+    fontSize: 16,
+    color: '#000000',
+  },
+  scoreContainer: {
+    backgroundColor: '#FFE156', // Consistent yellow background
+    padding: 10,
+    borderRadius: 12, // Updated to match button style
+    borderWidth: 3,
+    borderColor: '#000000',
+    // Removed transform: [{ rotate: '-1deg' }] for consistency
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 4,
+      height: 4,
     },
     shadowOpacity: 1,
     shadowRadius: 0,
@@ -237,7 +263,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#90FF9D',
+    backgroundColor: '#FFE156', // Changed from #90FF9D to match other buttons
     padding: 15,
     borderRadius: 12,
     borderWidth: 3,
@@ -245,7 +271,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignSelf: 'center',
     gap: 10,
-    transform: [{ rotate: '2deg' }],
+    // Removed transform: [{ rotate: '2deg' }] for consistency
     shadowColor: '#000000',
     shadowOffset: {
       width: 4,

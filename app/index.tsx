@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native
 import { Link } from 'expo-router';
 import { useGameStore } from '@/store/gameStore';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { TowerControl as GameController, Users as Users2 } from 'lucide-react-native';
+import { TowerControl as GameController, Users as Users2, Settings as SettingsIcon } from 'lucide-react-native';
 
 export default function Home() {
   const { setMode } = useGameStore();
@@ -32,7 +32,7 @@ export default function Home() {
 
         <Link href="/game" asChild>
           <TouchableOpacity
-            style={[styles.button, { transform: [{ rotate: '-2deg' }] }]}
+            style={styles.button}
             onPress={() => handleModeSelect('multi')}
           >
             <Users2 size={32} color="#000" />
@@ -41,7 +41,10 @@ export default function Home() {
         </Link>
 
         <Link href="/settings" asChild>
-          <TouchableOpacity style={[styles.button, styles.settingsButton]}>
+          <TouchableOpacity
+            style={styles.button}
+          >
+            <SettingsIcon size={32} color="#000" />
             <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
         </Link>
@@ -100,9 +103,5 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceGrotesk-Bold',
     fontSize: 24,
     color: '#000000',
-  },
-  settingsButton: {
-    backgroundColor: '#FF90E8',
-    transform: [{ rotate: '1deg' }],
   },
 });
