@@ -114,10 +114,6 @@ npm start
 ```
 Open `http://localhost:3000` in your browser (if web support is added).
 
-#### Download the APK
-- Click the **Download APK** button to download the `tictactoe.apk` file.
-- Follow the on-screen instructions to install on an Android device (enable **Install from Unknown Sources**).
-
 ## Development
 - **Mobile App**: Use Expo to develop and test. Modify `app/` for new features or screens.
 - **Animations**: Leverage `react-native-reanimated` for custom animations (e.g., fade-in, slide-in).
@@ -131,14 +127,7 @@ Build the APK using Expo:
 npx expo build:android -t apk
 ```
 Download the generated APK from the Expo dashboard.
-
-### Download Website
-*(Optional) If adding a web download page:*
-Build the React app:
-```bash
-npm run build
-```
-Deploy the `build` folder to a hosting service (e.g., Netlify, Vercel, GitHub Pages).
+https://expo.dev/accounts/king010/projects/bolt-expo-nativewind/builds/61972a16-561e-439e-98da-b916953f1219
 
 ## Animations
 - **Home Screen**: Slides up from the bottom and fades in (500ms).
