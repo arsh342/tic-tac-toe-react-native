@@ -127,7 +127,6 @@ Build the APK using Expo:
 npx expo build:android -t apk
 ```
 Download the generated APK from the Expo dashboard.
-https://expo.dev/accounts/king010/projects/bolt-expo-nativewind/builds/61972a16-561e-439e-98da-b916953f1219
 
 ## Animations
 - **Home Screen**: Slides up from the bottom and fades in (500ms).
