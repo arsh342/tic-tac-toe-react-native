@@ -144,6 +144,5 @@ Download the generated APK from the Expo dashboard.
 This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ## Contact
-- **Author**: [Arsh Singh]
 - **Email**: arshth134@gmail.com
 - **GitHub**: https://github.com/arsh342
