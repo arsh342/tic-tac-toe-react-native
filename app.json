@@ -8,9 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "assets": [
-      "./assets/images/icon.png"
-    ],
+    "assets": ["./assets/images/icon.png"],
     "android": {
       "package": "com.boltexpo.tictactoe",
       "versionCode": 2,
@@ -21,7 +19,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.boltexpo.tictactoe"
+      "bundleIdentifier": "com.boltexpo.tictactoe",
+      "buildNumber": "2"
     },
     "web": {
       "bundler": "metro",
