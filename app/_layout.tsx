@@ -1,9 +1,14 @@
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useFrameworkReady } from '@/hooks/useFrameworkReady';
-import { useFonts, SpaceGrotesk_400Regular, SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
+import { useFrameworkReady } from '../hooks/useFrameworkReady';
+import {
+  useFonts,
+  SpaceGrotesk_400Regular,
+  SpaceGrotesk_700Bold,
+} from '@expo-google-fonts/space-grotesk';
 import { SplashScreen } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,16 +31,11 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <Stack screenOptions={{ 
-        headerShown: false,
-        contentStyle: { backgroundColor: '#ffffff' }
-      }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="game" />
-        <Stack.Screen name="settings" />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="dark" />
-    </>
+    </GestureHandlerRootView>
   );
 }

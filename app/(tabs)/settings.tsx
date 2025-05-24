@@ -1,15 +1,22 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, Switch, ScrollView, TextInput } from 'react-native';
-import { useGameStore } from '../store/gameStore';
-import { useThemeStore, getThemeColors } from '../store/themeStore';
+import { useGameStore } from '../../store/gameStore';
+import { useThemeStore, getThemeColors } from '../../store/themeStore';
 import Animated, { 
   FadeIn,
 } from 'react-native-reanimated';
 import { 
-  Trash2,
+  Trash2, 
+  Volume2, 
+  VolumeX,
   Sun,
   Moon,
+  Monitor,
+  X,
+  Circle,
+  Palette,
 } from 'lucide-react-native';
+import Slider from '@react-native-community/slider';
 
 export default function Settings() {
   const { difficulty, setDifficulty, resetScores, soundEnabled, toggleSound, playerChoice, setPlayerChoice, playerXName, setPlayerXName, playerOName, setPlayerOName } = useGameStore();

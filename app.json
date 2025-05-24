@@ -2,7 +2,7 @@
   "expo": {
     "name": "Tic Tac Toe",
     "slug": "bolt-expo-nativewind",
-    "version": "1.0.1",
+    "version": "1.1.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -11,7 +11,7 @@
     "assets": ["./assets/images/icon.png"],
     "android": {
       "package": "com.boltexpo.tictactoe",
-      "versionCode": 2,
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
