@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, FlatList, Dimensions, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGameStore } from '../store/gameStore';
 import { useThemeStore, getThemeColors } from '../store/themeStore';
@@ -11,19 +11,25 @@ import Animated, {
   withTiming,
   SharedValue,
   useSharedValue,
+  FadeInUp,
+  FadeInLeft,
+  FadeInRight,
 } from 'react-native-reanimated';
 import { RotateCcw, ArrowLeft, Undo2 } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 type CellProps = {
   index: number;
   value: string | null;
-  onPress: () => void;
+  onPress: (index: number) => void;
   isWinning: boolean;
 };
 
 const Cell = React.memo(({ index, value, onPress, isWinning }: CellProps) => {
   const { theme, primaryColor, secondaryColor, accentColor } = useThemeStore();
-  const colors = getThemeColors(theme, { primaryColor, secondaryColor, accentColor });
+  const colors = useMemo(() => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }), [theme, primaryColor, secondaryColor, accentColor]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -41,8 +47,12 @@ const Cell = React.memo(({ index, value, onPress, isWinning }: CellProps) => {
     opacity: withSpring(value ? 1 : 0),
   }));
 
+  const handleCellPress = useCallback(() => {
+    onPress(index);
+  }, [onPress, index]);
+
   return (
-    <TouchableOpacity onPress={onPress} style={styles.cellTouchable}>
+    <TouchableOpacity onPress={handleCellPress} style={styles.cellTouchable}>
       <Animated.View style={[styles.cell, animatedStyle, { 
         borderColor: colors.border,
         shadowColor: colors.shadow
@@ -85,7 +95,20 @@ export default function Game() {
     playerChoice
   } = useGameStore();
   const { theme, primaryColor, secondaryColor, accentColor } = useThemeStore();
-  const colors = getThemeColors(theme, { primaryColor, secondaryColor, accentColor });
+  const colors = useMemo(() => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }), [theme, primaryColor, secondaryColor, accentColor]);
+  const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+
+  const isLandscape = width > height;
+
+  const boardSize = useMemo(() => {
+    // Calculate available space for the board
+    const availableWidth = width - (insets.left + insets.right + 40); // 40 for horizontal padding
+    const availableHeight = height - (insets.top + insets.bottom + 200); // 200 for header, status, and log
+
+    const maxBoardDimension = Math.min(availableWidth, availableHeight);
+    return Math.min(maxBoardDimension, 300); // Cap at 300px for larger screens to ensure it doesn't get too big
+  }, [width, height, insets]);
 
   const winningCombination = useMemo(() => {
     if (!winner || winner === 'draw') return [];
@@ -137,9 +160,20 @@ export default function Game() {
   return (
     <Animated.View 
       entering={FadeIn}
-      style={[styles.container, { backgroundColor: colors.background }]}>
+      style={[
+        styles.container,
+        { 
+          backgroundColor: colors.background,
+          paddingTop: insets.top + 20, // Add a bit extra padding for visual appeal
+          paddingBottom: insets.bottom + 20,
+          paddingLeft: insets.left + 20,
+          paddingRight: insets.right + 20,
+        },
+        isLandscape && styles.containerLandscape // Apply landscape styles if needed
+      ]}>
       <View style={styles.header}>
-        <TouchableOpacity 
+        <AnimatedTouchableOpacity 
+          entering={FadeInLeft.delay(200)}
           onPress={() => router.back()}
           style={[styles.button, { 
             backgroundColor: colors.card,
@@ -148,41 +182,55 @@ export default function Game() {
           }]}>
           <ArrowLeft size={24} color={colors.text} />
           <Text style={[styles.buttonText, { color: colors.text }]}>Back</Text>
-        </TouchableOpacity>
+        </AnimatedTouchableOpacity>
         
-        <View style={[styles.scoreContainer, { 
-          backgroundColor: colors.card,
-          borderColor: colors.border,
-          shadowColor: colors.shadow
-        }]}>
+        <Animated.View 
+          entering={FadeInRight.delay(200)}
+          style={[
+          styles.scoreContainer,
+          { 
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+            shadowColor: colors.shadow,
+          }
+        ]}>
           <Text style={[styles.scoreText, { color: colors.text }]}>
             {mode === 'single' 
               ? `${playerXName}: ${scores[mode].X} - AI: ${scores[mode].O}`
               : `${playerXName}: ${scores[mode].X} - ${playerOName}: ${scores[mode].O}`
             }
           </Text>
-        </View>
+        </Animated.View>
       </View>
 
-      <Animated.Text style={[styles.status, statusAnimatedStyle, { color: colors.text }]}>
+      <Animated.Text 
+        entering={FadeInUp.delay(400)}
+        style={[styles.status, statusAnimatedStyle, { color: colors.text }]}>
         {statusText}
       </Animated.Text>
 
-      <View style={styles.boardWrapper}>
-        <View style={[styles.board, { 
-          borderColor: colors.border,
-          shadowColor: colors.shadow
-        }]}>
+      <Animated.View 
+        entering={FadeInUp.delay(600)}
+        style={styles.boardWrapper}>
+        <View style={[
+          styles.board,
+          { 
+            borderColor: colors.border,
+            shadowColor: colors.shadow,
+            width: boardSize,
+            height: boardSize,
+          }
+        ]}>
           {board.map((value, index) => (
             <Cell
               key={index}
               index={index}
               value={value}
-              onPress={() => handleCellPress(index)}
+              onPress={handleCellPress}
               isWinning={winningCombination.includes(index)} />
           ))}
         </View>
-      </View>
+      </Animated.View>
 
       <FlatList
         style={[styles.logContainer, { borderColor: colors.border }]}
@@ -196,27 +244,34 @@ export default function Game() {
 
       {winner && (
         <Animated.View 
-          entering={FadeIn}
+          entering={FadeInUp.delay(800)} // Ensure this has a distinct animation
           style={styles.winnerContainer}>
-          <TouchableOpacity 
+          <AnimatedTouchableOpacity 
             style={[styles.button, { 
-              backgroundColor: colors.primary,
+              backgroundColor: colors.card,
               borderColor: colors.border,
               shadowColor: colors.shadow
             }]}
             onPress={resetGame}>
             <RotateCcw size={24} color={colors.text} />
             <Text style={[styles.buttonText, { color: colors.text }]}>Play Again</Text>
-          </TouchableOpacity>
+          </AnimatedTouchableOpacity>
         </Animated.View>
       )}
     </Animated.View>
   );
-}const styles = StyleSheet.create({
+}
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // Removed fixed paddingTop
+  },
+  containerLandscape: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     padding: 20,
-    paddingTop: 70,
   },
   header: {
     flexDirection: 'row',
@@ -248,67 +303,13 @@ export default function Game() {
   },
   buttonText: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 16,
+    fontSize: 18,
   },
   scoreContainer: {
     padding: 10,
     borderRadius: 12,
     borderWidth: 3,
-    shadowOffset: {
-      width: 4,
-      height: 4,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-  },
-  scoreText: {
-    fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 20,
-  },
-  status: {
-    fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  boardWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
-  },
-  board: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    aspectRatio: 1,
-    maxWidth: 400,
-    width: '100%',
-    borderRadius: 12,
-    borderWidth: 3,
-    padding: 10,
-    shadowOffset: {
-      width: 4,
-      height: 4,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-  },
-  cellTouchable: {
-    width: '33.33%',
-    aspectRatio: 1,
-    padding: 5,
-  },
-  cell: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderRadius: 12,
-    margin: 5,
     ...Platform.select({
-      web: {
-        cursor: 'pointer',
-      },
       default: {
         elevation: 4,
       },
@@ -320,35 +321,82 @@ export default function Game() {
     shadowOpacity: 1,
     shadowRadius: 0,
   },
+  scoreText: {
+    fontFamily: 'SpaceGrotesk-Bold',
+    fontSize: 18,
+  },
+  status: {
+    fontFamily: 'SpaceGrotesk-Bold',
+    fontSize: 32,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  boardWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  board: {
+    // Dynamic width and height applied inline
+    aspectRatio: 1, // Maintain aspect ratio
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    borderWidth: 8,
+    borderRadius: 24,
+    overflow: 'hidden',
+  },
+  cellTouchable: {
+    width: '33.333%',
+    height: '33.333%',
+  },
+  cell: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 4,
+    borderRadius: 16,
+    margin: 4,
+    ...Platform.select({
+      web: {
+        cursor: 'pointer',
+      },
+      default: {
+        elevation: 2,
+      },
+    }),
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 0,
+  },
   cellText: {
     fontFamily: 'SpaceGrotesk-Bold',
     fontSize: 48,
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 4,
-  },
-  disabledButton: {
-    opacity: 0.5,
-  },
-  winnerContainer: {
-    marginTop: 20,
   },
   logContainer: {
-    flex: 1,
-    marginTop: 20,
-    padding: 10,
-    borderWidth: 3,
+    maxHeight: 150, // Limit height of the log to prevent excessive scrolling
+    borderWidth: 1,
     borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
   },
   logTitle: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 18,
+    fontSize: 20,
     marginBottom: 10,
+    textAlign: 'center',
   },
   logEntry: {
     fontFamily: 'SpaceGrotesk-Regular',
-    fontSize: 14,
-    marginBottom: 5,
+    fontSize: 16,
+    paddingVertical: 2,
+  },
+  winnerContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
 });
 

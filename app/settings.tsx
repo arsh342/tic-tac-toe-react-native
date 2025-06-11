@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, Switch, ScrollView, TextInput } from 'react-native';
 import { useGameStore } from '../store/gameStore';
 import { useThemeStore, getThemeColors } from '../store/themeStore';
 import Animated, { 
   FadeIn,
+  FadeInUp,
 } from 'react-native-reanimated';
 import { 
   Trash2,
@@ -24,21 +25,31 @@ export default function Settings() {
     setSecondaryColor,
     setAccentColor
   } = useThemeStore();
-  const colors = getThemeColors(theme, { primaryColor, secondaryColor, accentColor });
 
-  const difficulties = [
+  const colors = useMemo(() => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }), [theme, primaryColor, secondaryColor, accentColor]);
+
+  const difficulties = useMemo(() => [
     { value: 'easy', label: 'Easy' },
     { value: 'hard', label: 'Hard' },
-  ] as const;
+  ] as const, []);
 
-  const handleThemeToggle = () => {
+  const handleThemeToggle = useCallback(() => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setThemeMode(newTheme);
-  };
+  }, [theme, setThemeMode]);
+
+  const handleSetThemeModeLight = useCallback(() => setThemeMode('light'), [setThemeMode]);
+  const handleSetThemeModeDark = useCallback(() => setThemeMode('dark'), [setThemeMode]);
+  const handleSetPlayerChoiceX = useCallback(() => setPlayerChoice('X'), [setPlayerChoice]);
+  const handleSetPlayerChoiceO = useCallback(() => setPlayerChoice('O'), [setPlayerChoice]);
+  const handleResetScores = useCallback(() => resetScores(), [resetScores]);
 
   // Assuming sound volume is stored as a number between 0 and 1
   // Need to add sound volume state and update logic in gameStore if not present
   const [soundVolume, setSoundVolume] = React.useState(0.5); // Placeholder state
+
+  const playerXPlaceholderColor = useMemo(() => colors.text + '80', [colors.text]);
+  const playerOPlaceholderColor = useMemo(() => colors.text + '80', [colors.text]);
 
   return (
     <ScrollView style={styles.scrollViewContent}>
@@ -46,11 +57,15 @@ export default function Settings() {
       entering={FadeIn}
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
+      <Animated.Text 
+        entering={FadeInUp.delay(200)}
+        style={[styles.title, { color: colors.text }]}>Settings</Animated.Text>
 
 
         {/* Theme Section */}
-        <View style={[styles.section, { 
+        <Animated.View 
+          entering={FadeInUp.delay(300)}
+          style={[styles.section, { 
           backgroundColor: colors.card,
           borderColor: colors.border,
           shadowColor: colors.shadow,
@@ -70,7 +85,7 @@ export default function Settings() {
                   shadowColor: colors.shadow
                 }
               ]}
-              onPress={() => setThemeMode('light')}
+              onPress={handleSetThemeModeLight}
             >
               <Sun size={24} color={colors.text} />
               <Text style={[styles.themeButtonText, { color: colors.text }]}>Light</Text>
@@ -85,16 +100,18 @@ export default function Settings() {
                   shadowColor: colors.shadow
                 }
               ]}
-              onPress={() => setThemeMode('dark')}
+              onPress={handleSetThemeModeDark}
             >
               <Moon size={24} color={colors.text} />
               <Text style={[styles.themeButtonText, { color: colors.text }]}>Dark</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Sound Section */}
-        <View style={[styles.section, { 
+        <Animated.View 
+          entering={FadeInUp.delay(400)}
+          style={[styles.section, { 
           backgroundColor: colors.card,
           borderColor: colors.border,
           shadowColor: colors.shadow,
@@ -109,15 +126,17 @@ export default function Settings() {
                value={soundEnabled}
                onValueChange={toggleSound}
                trackColor={{ false: colors.background, true: colors.secondary }}
-               thumbColor={Platform.OS === 'ios' ? colors.accent : (soundEnabled ? colors.secondary : colors.secondary)}
+               thumbColor={Platform.OS === 'ios' ? colors.accent : (soundEnabled ? colors.secondary : colors.accent)} // Simplified thumbColor
                ios_backgroundColor={colors.card}
                style={Platform.OS === 'android' ? styles.androidSwitch : undefined}
              />
           </View>
-        </View>
+        </Animated.View>
 
         {/* Player Choice Section */}
-        <View style={[styles.section, { 
+        <Animated.View 
+          entering={FadeInUp.delay(500)}
+          style={[styles.section, { 
           backgroundColor: colors.card,
           borderColor: colors.border,
           shadowColor: colors.shadow,
@@ -134,7 +153,7 @@ export default function Settings() {
                   shadowColor: colors.shadow
                 }
               ]}
-              onPress={() => setPlayerChoice('X')}
+              onPress={handleSetPlayerChoiceX}
             >
               <Text style={[styles.playerChoiceButtonText, { color: colors.text }]}>X</Text>
             </TouchableOpacity>
@@ -148,15 +167,17 @@ export default function Settings() {
                   shadowColor: colors.shadow
                 }
               ]}
-              onPress={() => setPlayerChoice('O')}
+              onPress={handleSetPlayerChoiceO}
             >
               <Text style={[styles.playerChoiceButtonText, { color: colors.text }]}>O</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
         {/* AI Difficulty Section */}
-        <View style={[styles.section, { 
+        <Animated.View 
+          entering={FadeInUp.delay(600)}
+          style={[styles.section, { 
           backgroundColor: colors.card,
           borderColor: colors.border,
           shadowColor: colors.shadow,
@@ -175,7 +196,7 @@ export default function Settings() {
                     shadowColor: colors.shadow
                   }
                 ]}
-                onPress={() => setDifficulty(value)}
+                onPress={useCallback(() => setDifficulty(value), [setDifficulty, value])} // Wrap inline function
               >
                 <Text style={[styles.difficultyButtonText, { color: colors.text }]}>
                   {label}
@@ -183,10 +204,12 @@ export default function Settings() {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </Animated.View>
 
         {/* Player Names Section */}
-        <View style={[styles.section, {
+        <Animated.View 
+          entering={FadeInUp.delay(700)}
+          style={[styles.section, {
           backgroundColor: colors.card,
           borderColor: colors.border,
           shadowColor: colors.shadow,
@@ -201,7 +224,7 @@ export default function Settings() {
               value={playerXName}
               onChangeText={setPlayerXName}
               placeholder="Enter name for Player X"
-              placeholderTextColor={colors.text + '80'} // Add some transparency
+              placeholderTextColor={playerXPlaceholderColor} // Use memoized color
             />
           </View>
           
@@ -212,23 +235,24 @@ export default function Settings() {
               value={playerOName}
               onChangeText={setPlayerOName}
               placeholder="Enter name for Player O"
-              placeholderTextColor={colors.text + '80'}
+              placeholderTextColor={playerOPlaceholderColor} // Use memoized color
             />
           </View>
-        </View>
+        </Animated.View>
 
         {/* Reset Scores Button */}
-        <TouchableOpacity 
+        <Animated.TouchableOpacity 
+          entering={FadeInUp.delay(800)}
           style={[styles.resetButton, { 
             backgroundColor: colors.accent,
             borderColor: colors.border,
             shadowColor: colors.shadow
           }]}
-          onPress={resetScores}
+          onPress={handleResetScores}
         >
           <Trash2 size={24} color={colors.text} />
           <Text style={[styles.resetButtonText, { color: colors.text }]}>Reset Scores</Text>
-        </TouchableOpacity>
+        </Animated.TouchableOpacity>
 
 
     </Animated.View>

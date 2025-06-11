@@ -2,8 +2,8 @@
   "expo": {
     "name": "Tic Tac Toe",
     "slug": "bolt-expo-nativewind",
-    "version": "1.1.5",
-    "orientation": "portrait",
+    "version": "2.0.0",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -11,7 +11,7 @@
     "assets": ["./assets/images/icon.png"],
     "android": {
       "package": "com.boltexpo.tictactoe",
-      "versionCode": 5,
+      "versionCode": 7,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.boltexpo.tictactoe",
-      "buildNumber": "2"
+      "buildNumber": "7"
     },
     "web": {
       "bundler": "metro",

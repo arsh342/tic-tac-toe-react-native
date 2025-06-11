@@ -69,13 +69,12 @@ const getSystemTheme = (): Theme => {
 };
 
 const getInitialThemeState = (): Omit<ThemeState, 'setThemeMode' | 'setPrimaryColor' | 'setSecondaryColor' | 'setAccentColor'> => {
-  const systemTheme = getSystemTheme();
   return {
-    themeMode: 'system',
-    theme: systemTheme,
-    primaryColor: DEFAULT_COLORS[systemTheme].primary,
-    secondaryColor: DEFAULT_COLORS[systemTheme].secondary,
-    accentColor: DEFAULT_COLORS[systemTheme].accent,
+    themeMode: 'light',
+    theme: 'light',
+    primaryColor: DEFAULT_COLORS.light.primary,
+    secondaryColor: DEFAULT_COLORS.light.secondary,
+    accentColor: DEFAULT_COLORS.light.accent,
   };
 };
 
