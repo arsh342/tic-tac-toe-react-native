@@ -12,6 +12,8 @@ import {
   Moon,
 } from 'lucide-react-native';
 
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+
 export default function Settings() {
   const { difficulty, setDifficulty, resetScores, soundEnabled, toggleSound, playerChoice, setPlayerChoice, playerXName, setPlayerXName, playerOName, setPlayerOName } = useGameStore();
   const { 
@@ -241,7 +243,7 @@ export default function Settings() {
         </Animated.View>
 
         {/* Reset Scores Button */}
-        <Animated.TouchableOpacity 
+        <AnimatedTouchableOpacity 
           entering={FadeInUp.delay(800)}
           style={[styles.resetButton, { 
             backgroundColor: colors.accent,
@@ -252,7 +254,7 @@ export default function Settings() {
         >
           <Trash2 size={24} color={colors.text} />
           <Text style={[styles.resetButtonText, { color: colors.text }]}>Reset Scores</Text>
-        </Animated.TouchableOpacity>
+        </AnimatedTouchableOpacity>
 
 
     </Animated.View>

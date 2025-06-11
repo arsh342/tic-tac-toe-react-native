@@ -16,7 +16,6 @@ import {
   Circle,
   Palette,
 } from 'lucide-react-native';
-import Slider from '@react-native-community/slider';
 
 export default function Settings() {
   const { difficulty, setDifficulty, resetScores, soundEnabled, toggleSound, playerChoice, setPlayerChoice, playerXName, setPlayerXName, playerOName, setPlayerOName } = useGameStore();
