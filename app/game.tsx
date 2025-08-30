@@ -1,9 +1,19 @@
 import React, { useCallback, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView, FlatList, Dimensions, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  ScrollView,
+  FlatList,
+  Dimensions,
+  useWindowDimensions,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useGameStore } from '../store/gameStore';
 import { useThemeStore, getThemeColors } from '../store/themeStore';
-import Animated, { 
+import Animated, {
   FadeIn,
   useAnimatedStyle,
   withSpring,
@@ -18,7 +28,8 @@ import Animated, {
 import { RotateCcw, ArrowLeft, Undo2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
 
 type CellProps = {
   index: number;
@@ -29,21 +40,41 @@ type CellProps = {
 
 const Cell = React.memo(({ index, value, onPress, isWinning }: CellProps) => {
   const { theme, primaryColor, secondaryColor, accentColor } = useThemeStore();
-  const colors = useMemo(() => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }), [theme, primaryColor, secondaryColor, accentColor]);
+  const colors = useMemo(
+    () => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }),
+    [theme, primaryColor, secondaryColor, accentColor]
+  );
+
+  // Choose color for X and O
+  const cellValueColor =
+    value === 'X' ? colors.text : value === 'O' ? colors.accent : colors.text;
+
+  // Animate rotation for winning cells
+  const rotation = useSharedValue(0);
+
+  React.useEffect(() => {
+    if (isWinning) {
+      rotation.value = withTiming(360, { duration: 1000 }, (finished) => {
+        if (finished) rotation.value = 0;
+      });
+    } else {
+      rotation.value = 0;
+    }
+  }, [isWinning, rotation]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: withSpring(isWinning ? 1.1 : 1) },
-      { rotate: withSpring(isWinning ? '5deg' : '0deg') }
-    ] as const,
+      { rotate: `${isWinning ? rotation.value : 0}deg` },
+    ] as any,
     backgroundColor: withTiming(isWinning ? colors.secondary : colors.card),
   }));
 
   const valueAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: withSpring(value ? 1 : 0) },
-      { rotate: withSpring(value ? '360deg' : '0deg') }
-    ] as const,
+      { rotate: value ? '360deg' : '0deg' },
+    ] as any,
     opacity: withSpring(value ? 1 : 0),
   }));
 
@@ -53,17 +84,23 @@ const Cell = React.memo(({ index, value, onPress, isWinning }: CellProps) => {
 
   return (
     <TouchableOpacity onPress={handleCellPress} style={styles.cellTouchable}>
-      <Animated.View style={[styles.cell, animatedStyle, { 
-        borderColor: colors.border,
-        shadowColor: colors.shadow
-      }]}>
-        <Animated.Text style={[
-          styles.cellText,
-          valueAnimatedStyle,
-          { color: colors.text }
-        ]}>
-          {value}
-        </Animated.Text>
+      <Animated.View
+        style={[
+          styles.cell,
+          animatedStyle,
+          {
+            borderColor: colors.border,
+            shadowColor: colors.shadow,
+          },
+        ]}
+      >
+        <Animated.View style={valueAnimatedStyle}>
+          <Animated.View>
+            <Text style={[styles.cellText, { color: cellValueColor }]}>
+              {value}
+            </Text>
+          </Animated.View>
+        </Animated.View>
       </Animated.View>
     </TouchableOpacity>
   );
@@ -72,14 +109,19 @@ const Cell = React.memo(({ index, value, onPress, isWinning }: CellProps) => {
 Cell.displayName = 'Cell';
 
 const WINNING_COMBINATIONS = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-  [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-  [0, 4, 8], [2, 4, 6]             // Diagonals
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8], // Rows
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8], // Columns
+  [0, 4, 8],
+  [2, 4, 6], // Diagonals
 ] as const;
 
 export default function Game() {
   const router = useRouter();
-  const { 
+  const {
     board,
     currentPlayer,
     winner,
@@ -92,10 +134,13 @@ export default function Game() {
     moveHistory,
     playerXName,
     playerOName,
-    playerChoice
+    playerChoice,
   } = useGameStore();
   const { theme, primaryColor, secondaryColor, accentColor } = useThemeStore();
-  const colors = useMemo(() => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }), [theme, primaryColor, secondaryColor, accentColor]);
+  const colors = useMemo(
+    () => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }),
+    [theme, primaryColor, secondaryColor, accentColor]
+  );
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
@@ -112,11 +157,14 @@ export default function Game() {
 
   const winningCombination = useMemo(() => {
     if (!winner || winner === 'draw') return [];
-    return WINNING_COMBINATIONS.find(line => 
-      board[line[0]] === winner && 
-      board[line[1]] === winner && 
-      board[line[2]] === winner
-    ) || [];
+    return (
+      WINNING_COMBINATIONS.find(
+        (line) =>
+          board[line[0]] === winner &&
+          board[line[1]] === winner &&
+          board[line[2]] === winner
+      ) || []
+    );
   }, [winner, board]);
 
   const statusText = useMemo(() => {
@@ -127,134 +175,139 @@ export default function Game() {
       }
       return `${winner === 'X' ? playerXName : playerOName} wins!`;
     }
-    if (isAIThinking) return "AI is thinking...";
+    if (isAIThinking) return 'AI is thinking...';
     if (mode === 'single') {
       return `${currentPlayer === playerChoice ? playerXName : 'AI'}'s turn`;
     }
     return `${currentPlayer === 'X' ? playerXName : playerOName}'s turn`;
-  }, [winner, currentPlayer, isAIThinking, playerXName, playerOName, mode, playerChoice]);
+  }, [
+    winner,
+    currentPlayer,
+    isAIThinking,
+    playerXName,
+    playerOName,
+    mode,
+    playerChoice,
+  ]);
 
-  const handleCellPress = useCallback((index: number) => {
-    if (!winner && !isAIThinking) {
-      makeMove(index);
-    }
-  }, [winner, isAIThinking, makeMove]);
+  const handleCellPress = useCallback(
+    (index: number) => {
+      if (!winner && !isAIThinking) {
+        makeMove(index);
+      }
+    },
+    [winner, isAIThinking, makeMove]
+  );
 
   const statusAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: withSpring(1.1) },
-      { translateY: withSpring(isAIThinking ? 5 : 0) }
+      { translateY: withSpring(isAIThinking ? 5 : 0) },
     ] as const,
     opacity: withSpring(isAIThinking ? 0.7 : 1),
   }));
 
-  const renderMoveLog = useCallback(({ item, index }: { item: typeof moveHistory[0], index: number }) => (
-    <Text key={index} style={[styles.logEntry, { color: colors.text }]}>
-      {mode === 'single'
-        ? `${item.player === playerChoice ? playerXName : 'AI'} at ${item.position}`
-        : `${item.player === 'X' ? playerXName : playerOName} at ${item.position}`
-      }
-    </Text>
-  ), [mode, playerChoice, playerXName, playerOName, colors.text]);
-
   return (
-    <Animated.View 
+    <Animated.View
       entering={FadeIn}
       style={[
         styles.container,
-        { 
+        {
           backgroundColor: colors.background,
           paddingTop: insets.top + 20, // Add a bit extra padding for visual appeal
           paddingBottom: insets.bottom + 20,
           paddingLeft: insets.left + 20,
           paddingRight: insets.right + 20,
         },
-        isLandscape && styles.containerLandscape // Apply landscape styles if needed
-      ]}>
+        isLandscape && styles.containerLandscape, // Apply landscape styles if needed
+      ]}
+    >
       <View style={styles.header}>
-        <AnimatedTouchableOpacity 
+        <AnimatedTouchableOpacity
           entering={FadeInLeft.delay(200)}
           onPress={() => router.back()}
-          style={[styles.button, { 
-            backgroundColor: colors.card,
-            borderColor: colors.border,
-            shadowColor: colors.shadow
-          }]}>
+          style={[
+            styles.button,
+            {
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+              shadowColor: colors.shadow,
+            },
+          ]}
+        >
           <ArrowLeft size={24} color={colors.text} />
           <Text style={[styles.buttonText, { color: colors.text }]}>Back</Text>
         </AnimatedTouchableOpacity>
-        
-        <Animated.View 
+
+        <Animated.View
           entering={FadeInRight.delay(200)}
           style={[
-          styles.scoreContainer,
-          { 
-            backgroundColor: colors.card,
-            borderColor: colors.border,
-            shadowColor: colors.shadow,
-          }
-        ]}>
+            styles.scoreContainer,
+            {
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+              shadowColor: colors.shadow,
+            },
+          ]}
+        >
           <Text style={[styles.scoreText, { color: colors.text }]}>
-            {mode === 'single' 
+            {mode === 'single'
               ? `${playerXName}: ${scores[mode].X} - AI: ${scores[mode].O}`
-              : `${playerXName}: ${scores[mode].X} - ${playerOName}: ${scores[mode].O}`
-            }
+              : `${playerXName}: ${scores[mode].X} - ${playerOName}: ${scores[mode].O}`}
           </Text>
         </Animated.View>
       </View>
 
-      <Animated.Text 
-        entering={FadeInUp.delay(400)}
-        style={[styles.status, statusAnimatedStyle, { color: colors.text }]}>
-        {statusText}
-      </Animated.Text>
+      <Animated.View entering={FadeInUp.delay(400)} style={statusAnimatedStyle}>
+        <Text style={[styles.status, { color: colors.text }]}>
+          {statusText}
+        </Text>
+      </Animated.View>
 
-      <Animated.View 
-        entering={FadeInUp.delay(600)}
-        style={styles.boardWrapper}>
-        <View style={[
-          styles.board,
-          { 
-            borderColor: colors.border,
-            shadowColor: colors.shadow,
-            width: boardSize,
-            height: boardSize,
-          }
-        ]}>
+      <Animated.View entering={FadeInUp.delay(600)} style={styles.boardWrapper}>
+        <View
+          style={[
+            styles.board,
+            {
+              borderColor: colors.border,
+              shadowColor: colors.shadow,
+              width: boardSize,
+              height: boardSize,
+            },
+          ]}
+        >
           {board.map((value, index) => (
             <Cell
               key={index}
               index={index}
               value={value}
               onPress={handleCellPress}
-              isWinning={winningCombination.includes(index)} />
+              isWinning={winningCombination.includes(index)}
+            />
           ))}
         </View>
       </Animated.View>
 
-      <FlatList
-        style={[styles.logContainer, { borderColor: colors.border }]}
-        data={moveHistory}
-        renderItem={renderMoveLog}
-        keyExtractor={(_, index) => index.toString()}
-        ListHeaderComponent={() => (
-          <Text style={[styles.logTitle, { color: colors.text }]}>Move Log</Text>
-        )}
-      />
-
       {winner && (
-        <Animated.View 
+        <Animated.View
           entering={FadeInUp.delay(800)} // Ensure this has a distinct animation
-          style={styles.winnerContainer}>
-          <AnimatedTouchableOpacity 
-            style={[styles.button, { 
-              backgroundColor: colors.card,
-              borderColor: colors.border,
-              shadowColor: colors.shadow
-            }]}
-            onPress={resetGame}>
+          style={styles.winnerContainer}
+        >
+          <AnimatedTouchableOpacity
+            style={[
+              styles.button,
+              {
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                shadowColor: colors.shadow,
+              },
+            ]}
+            onPress={resetGame}
+          >
             <RotateCcw size={24} color={colors.text} />
-            <Text style={[styles.buttonText, { color: colors.text }]}>Play Again</Text>
+            <Text style={[styles.buttonText, { color: colors.text }]}>
+              Play Again
+            </Text>
           </AnimatedTouchableOpacity>
         </Animated.View>
       )}
@@ -263,16 +316,6 @@ export default function Game() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // Removed fixed paddingTop
-  },
-  containerLandscape: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    padding: 20,
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -300,6 +343,16 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 0,
+  },
+  container: {
+    flex: 1,
+    // Removed fixed paddingTop
+  },
+  containerLandscape: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: 20,
   },
   buttonText: {
     fontFamily: 'SpaceGrotesk-Bold',
@@ -342,7 +395,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1, // Maintain aspect ratio
     flexDirection: 'row',
     flexWrap: 'wrap',
-    borderWidth: 8,
+    borderWidth: 0,
     borderRadius: 24,
     overflow: 'hidden',
   },
@@ -399,4 +452,3 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-

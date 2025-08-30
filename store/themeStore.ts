@@ -34,30 +34,30 @@ const STORAGE_KEYS = {
 
 const DEFAULT_COLORS = {
   light: {
-    primary: '#E1F5FE',    // Soft cyan background
-    secondary: '#42A5F5',  // Bright sky blue
-    accent: '#FF6F61',     // Bright coral red
+    primary: '#E1F5FE', // Soft cyan background
+    secondary: '#42A5F5', // Bright sky blue
+    accent: '#FF6F61', // Bright coral red
   },
   dark: {
-    primary: '#263238',    // Muted blue-gray
-    secondary: '#4FC3F7',  // Bright cyan
-    accent: '#FF8A65',     // Bright orange/salmon
+    primary: '#282c2cff', // Muted blue-gray
+    secondary: '#4FC3F7', // Bright cyan
+    accent: '#FF8A65', // Bright orange/salmon
   },
 } as const;
 
 const BASE_COLORS = {
   light: {
     background: '#FFFFFF', // Crisp white
-    text: '#212121',      // Deep gray (almost black)
-    border: '#DDDDDD',    // Subtle light gray
-    card: '#E1F5FE',      // Soft cyan background
+    text: '#000000ff', // Deep gray (almost black)
+    border: '#DDDDDD', // Subtle light gray
+    card: '#E1F5FE', // Soft cyan background
     shadow: 'rgba(0, 0, 0, 0.2)',
   },
   dark: {
-    background: '#121212', // Almost black
-    text: '#F5F5F5',      // Off-white
-    border: '#333333',    // Deep gray
-    card: '#263238',      // Even darker blue-gray for card background
+    background: '#0f0f0fff', // Almost black
+    text: '#F5F5F5', // Off-white
+    border: '#3e3e3eff', // Deep gray
+    card: '#1f2122ff', // Even darker blue-gray for card background
     shadow: 'rgba(255, 255, 255, 0.3)',
   },
 } as const;
@@ -68,13 +68,17 @@ const getSystemTheme = (): Theme => {
   return systemTheme === 'dark' ? 'dark' : 'light';
 };
 
-const getInitialThemeState = (): Omit<ThemeState, 'setThemeMode' | 'setPrimaryColor' | 'setSecondaryColor' | 'setAccentColor'> => {
+const getInitialThemeState = (): Omit<
+  ThemeState,
+  'setThemeMode' | 'setPrimaryColor' | 'setSecondaryColor' | 'setAccentColor'
+> => {
+  const systemTheme = getSystemTheme();
   return {
-    themeMode: 'light',
-    theme: 'light',
-    primaryColor: DEFAULT_COLORS.light.primary,
-    secondaryColor: DEFAULT_COLORS.light.secondary,
-    accentColor: DEFAULT_COLORS.light.accent,
+    themeMode: 'system',
+    theme: systemTheme,
+    primaryColor: DEFAULT_COLORS[systemTheme].primary,
+    secondaryColor: DEFAULT_COLORS[systemTheme].secondary,
+    accentColor: DEFAULT_COLORS[systemTheme].accent,
   };
 };
 
@@ -118,20 +122,24 @@ export const useThemeStore = create<ThemeState>((set, get) => {
   // Initialize with default values
   const initialState = getInitialThemeState();
   set(initialState);
-  
+
   // Load saved preferences
   const loadSavedPreferences = async () => {
     try {
-      const [themeMode, primaryColor, secondaryColor, accentColor] = await Promise.all([
-        AsyncStorage.getItem(STORAGE_KEYS.THEME_MODE),
-        AsyncStorage.getItem(STORAGE_KEYS.PRIMARY_COLOR),
-        AsyncStorage.getItem(STORAGE_KEYS.SECONDARY_COLOR),
-        AsyncStorage.getItem(STORAGE_KEYS.ACCENT_COLOR),
-      ]);
+      const [themeMode, primaryColor, secondaryColor, accentColor] =
+        await Promise.all([
+          AsyncStorage.getItem(STORAGE_KEYS.THEME_MODE),
+          AsyncStorage.getItem(STORAGE_KEYS.PRIMARY_COLOR),
+          AsyncStorage.getItem(STORAGE_KEYS.SECONDARY_COLOR),
+          AsyncStorage.getItem(STORAGE_KEYS.ACCENT_COLOR),
+        ]);
 
-      const effectiveTheme = themeMode === 'system' ? getSystemTheme() : (themeMode as Theme || 'light');
+      const effectiveTheme =
+        themeMode === 'system'
+          ? getSystemTheme()
+          : (themeMode as Theme) || 'light';
       const themeColors = DEFAULT_COLORS[effectiveTheme];
-      
+
       set({
         themeMode: (themeMode as ThemeMode) || 'system',
         theme: effectiveTheme,
@@ -202,7 +210,8 @@ export const useThemeStore = create<ThemeState>((set, get) => {
 export const getThemeColors = (theme: Theme, customColors: CustomColors) => {
   const colors = {
     primaryColor: customColors?.primaryColor || DEFAULT_COLORS[theme].primary,
-    secondaryColor: customColors?.secondaryColor || DEFAULT_COLORS[theme].secondary,
+    secondaryColor:
+      customColors?.secondaryColor || DEFAULT_COLORS[theme].secondary,
     accentColor: customColors?.accentColor || DEFAULT_COLORS[theme].accent,
   };
 
@@ -212,4 +221,4 @@ export const getThemeColors = (theme: Theme, customColors: CustomColors) => {
     secondary: colors.secondaryColor,
     accent: colors.accentColor,
   };
-}; 
+};

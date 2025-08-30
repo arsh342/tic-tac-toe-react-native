@@ -78,7 +78,7 @@ export default function Settings() {
               ]}
               onPress={() => setThemeMode('light')}
             >
-              <Sun size={24} color={colors.text} />
+              {/* <Sun size={24} color={colors.text} /> */}
               <Text style={[styles.themeButtonText, { color: colors.text }]}>Light</Text>
             </TouchableOpacity>
 
@@ -93,7 +93,7 @@ export default function Settings() {
               ]}
               onPress={() => setThemeMode('dark')}
             >
-              <Moon size={24} color={colors.text} />
+              {/* <Moon size={24} color={colors.text} /> */}
               <Text style={[styles.themeButtonText, { color: colors.text }]}>Dark</Text>
             </TouchableOpacity>
           </View>
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 20,
-    borderRadius: 12,
+    borderRadius: 30,
     padding: 20,
     borderWidth: 3,
     width: '100%',
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   themeButton: {
     flex: 1,
     padding: 15,
-    borderRadius: 12,
+    borderRadius: 20,
     borderWidth: 3,
     alignItems: 'center',
     gap: 10,
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   difficultyButton: {
     flex: 1,
     padding: 15,
-    borderRadius: 12,
+    borderRadius: 20,
     borderWidth: 3,
     alignItems: 'center',
     ...Platform.select({
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
-    borderRadius: 12,
+    borderRadius: 30,
     borderWidth: 3,
     gap: 10,
     width: '100%',
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
    playerChoiceButton: {
      flex: 1,
      padding: 15,
-     borderRadius: 12,
+     borderRadius: 20,
      borderWidth: 3,
      alignItems: 'center',
      ...Platform.select({
@@ -468,14 +468,9 @@ const styles = StyleSheet.create({
      fontFamily: 'SpaceGrotesk-Bold',
      fontSize: 16,
    },
-   appVersion:{
-    fontFamily: 'SpaceGrotesk-Regular',
-    fontSize: 14,
-    marginTop: 'auto', // Push app version to the bottom
-   },
    nameInputContainer: {
      width: '100%',
-     marginBottom: 15,
+     marginBottom: 2,
    },
    nameInputLabel: {
      fontFamily: 'SpaceGrotesk-Medium',
@@ -484,7 +479,7 @@ const styles = StyleSheet.create({
    },
    nameInput: {
      borderWidth: 2,
-     borderRadius: 8,
+     borderRadius: 20,
      paddingVertical: 10,
      paddingHorizontal: 15,
      fontSize: 16,
