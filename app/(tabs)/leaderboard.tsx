@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     paddingTop: 70,
-    paddingBottom: 60,
+    paddingBottom: 0,
   },
   flatList: {
     flex: 1,

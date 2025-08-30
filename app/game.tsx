@@ -5,9 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
-  ScrollView,
-  FlatList,
-  Dimensions,
   useWindowDimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -17,9 +14,7 @@ import Animated, {
   FadeIn,
   useAnimatedStyle,
   withSpring,
-  withSequence,
   withTiming,
-  SharedValue,
   useSharedValue,
   FadeInUp,
   FadeInLeft,

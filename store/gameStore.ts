@@ -375,6 +375,12 @@ export const useGameStore = create<GameState>((set, get) => {
       const newHistory = currentHistory.filter((_, i) => i !== index);
       set({ gameHistory: newHistory });
       storageHelpers.saveHistory(newHistory);
+      // If all history is deleted, reset scores
+      if (newHistory.length === 0) {
+        const resetScores = { single: { X: 0, O: 0 }, multi: { X: 0, O: 0 } };
+        set({ scores: resetScores });
+        storageHelpers.saveScores(resetScores);
+      }
     },
     updateScores: (winner: Player | 'draw') => {
       const state = get();

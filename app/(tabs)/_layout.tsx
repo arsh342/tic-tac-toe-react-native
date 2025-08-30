@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Swords, Trophy, Settings as SettingsIcon } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useThemeStore, getThemeColors } from '../../store/themeStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,29 +21,32 @@ export default function TabLayout() {
         tabBarStyle: [
           styles.tabBar,
           {
-            backgroundColor: colors.card, // solid at the bottom, theme-aware
-            borderTopColor: colors.border,
-            borderTopWidth: 0,
-            shadowColor: colors.shadow,
-            shadowOffset: { width: 0, height: -8 },
-            shadowOpacity: 0.18,
-            shadowRadius: 24,
+            backgroundColor: colors.card,
+            borderRadius: 30,
+            marginHorizontal: 8,
+            marginBottom: insets.bottom + 8,
+            shadowRadius: 30,
             elevation: 24,
-            paddingBottom: insets.bottom,
+            paddingTop: 4,
+            paddingBottom: 0,
+            borderTopWidth: 0,
+            borderTopColor: 'transparent',
           },
         ],
         tabBarBackground: () => (
-          <LinearGradient
-            colors={[
-              theme === 'dark'
-                ? 'rgba(38,50,56,0.25)'
-                : 'rgba(255,255,255,0.25)',
-              colors.card,
-            ]}
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
-            style={StyleSheet.absoluteFill}
-          />
+          <View style={{ flex: 1, borderRadius: 30, overflow: 'hidden' }}>
+            <LinearGradient
+              colors={[
+                theme === 'dark'
+                  ? 'rgba(38,50,56,0.25)'
+                  : 'rgba(255,255,255,0.25)',
+                colors.card,
+              ]}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </View>
         ),
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.text,
@@ -83,14 +86,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 60,
-    borderTopWidth: 0,
-    borderTopColor: 'rgba(0,0,0,0.08)',
-    backgroundColor: '#fff', // fallback, overridden by theme
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -8 },
-    shadowOpacity: 0.18,
-    shadowRadius: 24,
-    elevation: 24,
     padding: 4,
   },
 });
