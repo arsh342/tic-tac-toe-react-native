@@ -231,20 +231,27 @@ export default function Leaderboard() {
     );
   };
 
+  const renderHeader = () => (
+    <>
+      <Text style={[styles.title, { color: colors.text }]}>Leaderboard</Text>
+      {renderScores()}
+    </>
+  );
+
   return (
     <Animated.View
       entering={FadeIn}
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <Text style={[styles.title, { color: colors.text }]}>Leaderboard</Text>
       <FlatList
         data={gameHistory}
         renderItem={renderHistoryItem}
         keyExtractor={(_, index) => index.toString()}
-        ListHeaderComponent={renderScores}
+        ListHeaderComponent={renderHeader}
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
         extraData={expandedIndices}
+        contentContainerStyle={{ paddingBottom: 80 }}
       />
     </Animated.View>
   );
@@ -260,7 +267,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 70,
+    paddingTop: 0,
     paddingBottom: 0,
   },
   flatList: {
@@ -269,6 +276,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'SpaceGrotesk-Bold',
     fontSize: 32,
+    marginTop: 60,
     marginBottom: 20,
     textAlign: 'center',
   },

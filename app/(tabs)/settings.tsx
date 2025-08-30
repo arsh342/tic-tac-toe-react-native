@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'SpaceGrotesk-Bold',
     fontSize: 32,
-    marginBottom: 30,
+    marginBottom: 20,
     textAlign: 'center',
   },
   section: {
@@ -401,9 +401,8 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 30,
     borderWidth: 3,
-    gap: 10,
+    gap: 0,
     width: '100%',
-    marginTop:20,
     ...Platform.select({
       web: {
         cursor: 'pointer',
