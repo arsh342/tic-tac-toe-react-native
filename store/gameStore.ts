@@ -281,8 +281,9 @@ const gameHelpers = {
       return availableMoves[Math.floor(Math.random() * availableMoves.length)];
     }
 
+    // Hard mode: add randomness to best moves
     let bestScore = -Infinity;
-    let bestMove = availableMoves[0];
+    let bestMoves: number[] = [];
 
     for (const move of availableMoves) {
       board[move] = 'O';
@@ -291,11 +292,14 @@ const gameHelpers = {
 
       if (score > bestScore) {
         bestScore = score;
-        bestMove = move;
+        bestMoves = [move];
+      } else if (score === bestScore) {
+        bestMoves.push(move);
       }
     }
 
-    return bestMove;
+    // Pick randomly among best moves
+    return bestMoves[Math.floor(Math.random() * bestMoves.length)];
   },
 };
 

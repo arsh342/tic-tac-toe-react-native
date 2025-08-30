@@ -161,7 +161,9 @@ export default function Leaderboard() {
                   item.winner === 'X' ? item.playerXName : item.playerOName
                 } wins!`}
           </Text>
-          <Text style={styles.expandIcon}>{expanded ? '▲' : '▼'}</Text>
+          <Text style={[styles.expandIcon, { opacity: 0 }]}>
+            {expanded ? '▲' : '▼'}
+          </Text>
         </TouchableOpacity>
         {/* Date and Time below header, not inside header row */}
         {item.timestamp && (
