@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderRadius: 12,
+    borderRadius: 30,
     borderWidth: 3,
     gap: 5,
     ...Platform.select({
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   },
   scoreContainer: {
     padding: 10,
-    borderRadius: 12,
+    borderRadius: 30,
     borderWidth: 3,
     ...Platform.select({
       default: {
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     borderWidth: 0,
-    borderRadius: 24,
+    borderRadius: 0,
     overflow: 'hidden',
   },
   cellTouchable: {
@@ -429,26 +429,8 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceGrotesk-Bold',
     fontSize: 48,
   },
-  logContainer: {
-    maxHeight: 150, // Limit height of the log to prevent excessive scrolling
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-  },
-  logTitle: {
-    fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 20,
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  logEntry: {
-    fontFamily: 'SpaceGrotesk-Regular',
-    fontSize: 16,
-    paddingVertical: 2,
-  },
   winnerContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 40,
   },
 });

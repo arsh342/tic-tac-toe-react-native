@@ -6,15 +6,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import { 
-  Trash2, 
-  Volume2, 
-  VolumeX,
-  Sun,
-  Moon,
-  Monitor,
-  X,
-  Circle,
-  Palette,
+  Trash2,
 } from 'lucide-react-native';
 
 export default function Settings() {
@@ -25,10 +17,7 @@ export default function Settings() {
     primaryColor,
     secondaryColor,
     accentColor,
-    setThemeMode,
-    setPrimaryColor,
-    setSecondaryColor,
-    setAccentColor
+    setThemeMode
   } = useThemeStore();
   const colors = getThemeColors(theme, { primaryColor, secondaryColor, accentColor });
 
@@ -41,10 +30,6 @@ export default function Settings() {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setThemeMode(newTheme);
   };
-
-  // Assuming sound volume is stored as a number between 0 and 1
-  // Need to add sound volume state and update logic in gameStore if not present
-  const [soundVolume, setSoundVolume] = React.useState(0.5); // Placeholder state
 
   return (
     <ScrollView style={styles.scrollViewContent}>

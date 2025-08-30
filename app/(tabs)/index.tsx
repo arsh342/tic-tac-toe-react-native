@@ -1,23 +1,41 @@
 import React, { useCallback, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  useWindowDimensions,
+} from 'react-native';
 import { Link } from 'expo-router';
 import { useGameStore } from '../../store/gameStore';
 import { useThemeStore, getThemeColors } from '../../store/themeStore';
-import Animated, { FadeIn, FadeInUp, FadeInLeft } from 'react-native-reanimated';
-import { Bot as Users1, Users as Users2, Settings as SettingsIcon } from 'lucide-react-native';
+import Animated, {
+  FadeIn,
+  FadeInUp,
+  FadeInLeft,
+} from 'react-native-reanimated';
+import { User as Users1, UserPlus as Users2 } from 'lucide-react-native';
 
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function Home() {
   const { setMode } = useGameStore();
   const { theme, primaryColor, secondaryColor, accentColor } = useThemeStore();
-  const colors = useMemo(() => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }), [theme, primaryColor, secondaryColor, accentColor]);
+  const colors = useMemo(
+    () => getThemeColors(theme, { primaryColor, secondaryColor, accentColor }),
+    [theme, primaryColor, secondaryColor, accentColor]
+  );
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
-  const handleModeSelect = useCallback((mode: 'single' | 'multi') => {
-    setMode(mode);
-  }, [setMode]);
+  const handleModeSelect = useCallback(
+    (mode: 'single' | 'multi') => {
+      setMode(mode);
+    },
+    [setMode]
+  );
 
   return (
     <Animated.View
@@ -25,87 +43,143 @@ export default function Home() {
       style={[
         styles.container,
         { backgroundColor: colors.background },
-        isLandscape && styles.containerLandscape
+        isLandscape && styles.containerLandscape,
       ]}
     >
-      <Animated.Text 
+      <Animated.Text
         entering={FadeInUp.delay(200)}
         style={[
           styles.title,
           { color: colors.text },
-          isLandscape && styles.titleLandscape
-        ]}>Tic Tac Toe</Animated.Text>
+          isLandscape && styles.titleLandscape,
+        ]}
+      >
+        Tic Tac Toe
+      </Animated.Text>
 
-      <View style={[
-        styles.buttonsContainer,
-        isLandscape && styles.buttonsContainerLandscape
-      ]}>
+      <View style={{ width: '100%', maxWidth: 400, gap: 24, marginTop: 24 }}>
         <Link href="/game" asChild>
-          <AnimatedTouchableOpacity
-            entering={FadeInLeft.delay(400)}
-            style={[
-              styles.button,
-              {
-                backgroundColor: colors.primary,
-                borderColor: colors.accent,
-                borderWidth: 4,
-                borderStyle: 'solid',
-                shadowColor: colors.shadow
-              },
-              isLandscape && styles.buttonLandscape
-            ]}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            style={{
+              backgroundColor: colors.card,
+              borderRadius: 30,
+              borderWidth: 2.5,
+              borderColor: colors.border,
+              paddingVertical: 22,
+              paddingHorizontal: 18,
+              marginBottom: 12,
+              flexDirection: 'row',
+              alignItems: 'center',
+              shadowColor: colors.shadow,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.12,
+              shadowRadius: 16,
+              elevation: 6,
+              backdropFilter: Platform.OS === 'web' ? 'blur(12px)' : undefined,
+            }}
             onPress={() => handleModeSelect('single')}
           >
-            <View style={styles.buttonContent}>
-              <Users1 size={isLandscape ? 36 : 48} color={colors.text} />
-              <View style={styles.buttonTextContainer}>
-                <Text style={[
-                  styles.buttonText,
-                  { color: colors.text },
-                  isLandscape && styles.buttonTextLandscape
-                ]}>Single Player</Text>
-                <Text style={[
-                  styles.buttonSubtext,
-                  { color: colors.text },
-                  isLandscape && styles.buttonSubtextLandscape
-                ]}>Play against AI</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+            >
+              <Users1
+                size={40}
+                color={colors.text}
+                style={{ marginRight: 18 }}
+              />
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Text
+                  style={{
+                    fontFamily: 'SpaceGrotesk-Bold',
+                    fontSize: 22,
+                    color: colors.text,
+                    marginBottom: 2,
+                    textAlign: 'center',
+                  }}
+                >
+                  Single Player
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'SpaceGrotesk-Regular',
+                    fontSize: 15,
+                    color: colors.text,
+                    opacity: 0.7,
+                    textAlign: 'center',
+                  }}
+                >
+                  Play against AI
+                </Text>
               </View>
             </View>
-          </AnimatedTouchableOpacity>
+          </TouchableOpacity>
         </Link>
-
         <Link href="/game" asChild>
-          <AnimatedTouchableOpacity
-            entering={FadeInLeft.delay(600)}
-            style={[
-              styles.button,
-              {
-                backgroundColor: colors.primary,
-                borderColor: colors.secondary,
-                borderWidth: 4,
-                borderStyle: 'solid',
-                shadowColor: colors.shadow
-              },
-              isLandscape && styles.buttonLandscape
-            ]}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            style={{
+              backgroundColor: colors.card,
+              borderRadius: 30,
+              borderWidth: 2.5,
+              borderColor: colors.border,
+              paddingVertical: 22,
+              paddingHorizontal: 18,
+              flexDirection: 'row',
+              alignItems: 'center',
+              shadowColor: colors.shadow,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.12,
+              shadowRadius: 16,
+              elevation: 6,
+              backdropFilter: Platform.OS === 'web' ? 'blur(12px)' : undefined,
+            }}
             onPress={() => handleModeSelect('multi')}
           >
-            <View style={[styles.buttonContent, {borderColor: colors.accent}]}>
-              <Users2 size={isLandscape ? 36 : 48} color={colors.text} />
-              <View style={styles.buttonTextContainer}>
-                <Text style={[
-                  styles.buttonText,
-                  { color: colors.text },
-                  isLandscape && styles.buttonTextLandscape
-                ]}>Two Players</Text>
-                <Text style={[
-                  styles.buttonSubtext,
-                  { color: colors.text },
-                  isLandscape && styles.buttonSubtextLandscape
-                ]}>Play with a friend</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+            >
+              <Users2
+                size={40}
+                color={colors.text}
+                style={{ marginRight: 18 }}
+              />
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Text
+                  style={{
+                    fontFamily: 'SpaceGrotesk-Bold',
+                    fontSize: 22,
+                    color: colors.text,
+                    marginBottom: 2,
+                    textAlign: 'center',
+                  }}
+                >
+                  Two Players
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'SpaceGrotesk-Regular',
+                    fontSize: 15,
+                    color: colors.text,
+                    opacity: 0.7,
+                    textAlign: 'center',
+                  }}
+                >
+                  Play with a friend
+                </Text>
               </View>
             </View>
-          </AnimatedTouchableOpacity>
+          </TouchableOpacity>
         </Link>
       </View>
     </Animated.View>
@@ -125,51 +199,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     transform: [{ rotate: '1deg' }],
   },
-  buttonsContainer: {
-    width: '100%',
-    maxWidth: 400,
-    gap: 32,
-    padding: 24,
-    backgroundColor: 'transparent',
-    borderRadius: 16,
-  },
-  button: {
-    padding: 20,
-    borderRadius: 16,
-    width: '100%',
-    ...Platform.select({
-      web: {
-        cursor: 'pointer',
-      },
-      default: {
-        elevation: 4,
-      },
-    }),
-    shadowOffset: {
-      width: 4,
-      height: 4,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  buttonTextContainer: {
-    flex: 1,
-  },
-  buttonText: {
-    fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 24,
-    marginBottom: 4,
-  },
-  buttonSubtext: {
-    fontFamily: 'SpaceGrotesk-Regular',
-    fontSize: 16,
-    opacity: 0.8,
-  },
+  // ...existing code...
   containerLandscape: {
     // Add landscape-specific styles here
   },
