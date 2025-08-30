@@ -372,15 +372,23 @@ export const useGameStore = create<GameState>((set, get) => {
     gameHistory: [], // will be replaced by loaded history if present
     deleteHistoryItem: (index: number) => {
       const currentHistory = get().gameHistory;
+      const match = currentHistory[index];
       const newHistory = currentHistory.filter((_, i) => i !== index);
-      set({ gameHistory: newHistory });
-      storageHelpers.saveHistory(newHistory);
+      // Update scores by removing the winner of the deleted match
+      let newScores = { ...get().scores };
+      if (match && match.winner !== 'draw') {
+        newScores[match.mode][match.winner] = Math.max(
+          0,
+          newScores[match.mode][match.winner] - 1
+        );
+      }
       // If all history is deleted, reset scores
       if (newHistory.length === 0) {
-        const resetScores = { single: { X: 0, O: 0 }, multi: { X: 0, O: 0 } };
-        set({ scores: resetScores });
-        storageHelpers.saveScores(resetScores);
+        newScores = { single: { X: 0, O: 0 }, multi: { X: 0, O: 0 } };
       }
+      set({ gameHistory: newHistory, scores: newScores });
+      storageHelpers.saveHistory(newHistory);
+      storageHelpers.saveScores(newScores);
     },
     updateScores: (winner: Player | 'draw') => {
       const state = get();
