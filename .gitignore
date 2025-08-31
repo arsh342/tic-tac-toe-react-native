@@ -1,5 +1,7 @@
 # dependencies
 node_modules/
+android/
+ios/
 
 # expo
 .expo/
@@ -32,3 +34,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+app.json
