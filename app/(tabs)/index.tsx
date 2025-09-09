@@ -76,7 +76,6 @@ export default function Home() {
               shadowOpacity: 0.12,
               shadowRadius: 16,
               elevation: 6,
-              backdropFilter: Platform.OS === 'web' ? 'blur(12px)' : undefined,
             }}
             onPress={() => handleModeSelect('single')}
           >
@@ -137,7 +136,6 @@ export default function Home() {
               shadowOpacity: 0.12,
               shadowRadius: 16,
               elevation: 6,
-              backdropFilter: Platform.OS === 'web' ? 'blur(12px)' : undefined,
             }}
             onPress={() => handleModeSelect('multi')}
           >
@@ -199,7 +197,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     transform: [{ rotate: '1deg' }],
   },
-  // ...existing code...
   containerLandscape: {
     // Add landscape-specific styles here
   },
