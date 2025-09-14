@@ -11,6 +11,7 @@ import {
 import { useGameStore } from '../../store/gameStore';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeStore, getThemeColors } from '../../store/themeStore';
+import BannerAdComponent from '../../components/BannerAdComponent';
 
 const indexToCoordinate = (index: number): string => {
   const row = Math.floor(index / 3);
@@ -234,7 +235,13 @@ export default function Leaderboard() {
   const renderHeader = () => (
     <>
       <Text style={[styles.title, { color: colors.text }]}>Leaderboard</Text>
+      <View style={{ paddingBottom: 20 }}>
+          <BannerAdComponent />
+        </View>
       {renderScores()}
+      {/* Banner Ad below scores */}
+      <BannerAdComponent />
+
     </>
   );
 

@@ -22,6 +22,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { RotateCcw, ArrowLeft, Undo2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import BannerAdComponent from '../components/BannerAdComponent';
+import NativeAdComponent from '../components/NativeAdComponent';
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -203,92 +205,25 @@ export default function Game() {
   }));
 
   return (
-    <Animated.View
-      entering={FadeIn}
-      style={[
-        styles.container,
-        {
-          backgroundColor: colors.background,
-          paddingTop: insets.top + 20, // Add a bit extra padding for visual appeal
-          paddingBottom: insets.bottom + 20,
-          paddingLeft: insets.left + 20,
-          paddingRight: insets.right + 20,
-        },
-        isLandscape && styles.containerLandscape, // Apply landscape styles if needed
-      ]}
-    >
-      <View style={styles.header}>
-        <AnimatedTouchableOpacity
-          entering={FadeInLeft.delay(200)}
-          onPress={() => router.back()}
-          style={[
-            styles.button,
-            {
-              backgroundColor: colors.card,
-              borderColor: colors.border,
-              shadowColor: colors.shadow,
-            },
-          ]}
-        >
-          <ArrowLeft size={24} color={colors.text} />
-          <Text style={[styles.buttonText, { color: colors.text }]}>Back</Text>
-        </AnimatedTouchableOpacity>
-
-        <Animated.View
-          entering={FadeInRight.delay(200)}
-          style={[
-            styles.scoreContainer,
-            {
-              backgroundColor: colors.card,
-              borderColor: colors.border,
-              shadowColor: colors.shadow,
-            },
-          ]}
-        >
-          <Text style={[styles.scoreText, { color: colors.text }]}>
-            {mode === 'single'
-              ? `${playerXName}: ${scores[mode].X} - AI: ${scores[mode].O}`
-              : `${playerXName}: ${scores[mode].X} - ${playerOName}: ${scores[mode].O}`}
-          </Text>
-        </Animated.View>
-      </View>
-
-      <Animated.View entering={FadeInUp.delay(400)} style={statusAnimatedStyle}>
-        <Text style={[styles.status, { color: colors.text }]}>
-          {statusText}
-        </Text>
-      </Animated.View>
-
-      <Animated.View entering={FadeInUp.delay(600)} style={styles.boardWrapper}>
-        <View
-          style={[
-            styles.board,
-            {
-              borderColor: colors.border,
-              shadowColor: colors.shadow,
-              width: boardSize,
-              height: boardSize,
-            },
-          ]}
-        >
-          {board.map((value, index) => (
-            <Cell
-              key={index}
-              index={index}
-              value={value}
-              onPress={handleCellPress}
-              isWinning={winningCombination.includes(index)}
-            />
-          ))}
-        </View>
-      </Animated.View>
-
-      {winner && (
-        <Animated.View
-          entering={FadeInUp.delay(800)} // Ensure this has a distinct animation
-          style={styles.winnerContainer}
-        >
+    <>
+      <Animated.View
+        entering={FadeIn}
+        style={[
+          styles.container,
+          {
+            backgroundColor: colors.background,
+            paddingTop: insets.top + 20,
+            paddingBottom: insets.bottom + 20,
+            paddingLeft: insets.left + 20,
+            paddingRight: insets.right + 20,
+          },
+          isLandscape && styles.containerLandscape,
+        ]}
+      >
+        <View style={styles.header}>
           <AnimatedTouchableOpacity
+            entering={FadeInLeft.delay(200)}
+            onPress={() => router.back()}
             style={[
               styles.button,
               {
@@ -297,16 +232,94 @@ export default function Game() {
                 shadowColor: colors.shadow,
               },
             ]}
-            onPress={resetGame}
           >
-            <RotateCcw size={24} color={colors.text} />
+            <ArrowLeft size={24} color={colors.text} />
             <Text style={[styles.buttonText, { color: colors.text }]}>
-              Play Again
+              Back
             </Text>
           </AnimatedTouchableOpacity>
+
+          <Animated.View
+            entering={FadeInRight.delay(200)}
+            style={[
+              styles.scoreContainer,
+              {
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                shadowColor: colors.shadow,
+              },
+            ]}
+          >
+            <Text style={[styles.scoreText, { color: colors.text }]}>
+              {mode === 'single'
+                ? `${playerXName}: ${scores[mode].X} - AI: ${scores[mode].O}`
+                : `${playerXName}: ${scores[mode].X} - ${playerOName}: ${scores[mode].O}`}
+            </Text>
+          </Animated.View>
+        </View>
+
+        <Animated.View
+          entering={FadeInUp.delay(400)}
+          style={statusAnimatedStyle}
+        >
+          <Text style={[styles.status, { color: colors.text }]}>
+            {statusText}
+          </Text>
         </Animated.View>
-      )}
-    </Animated.View>
+
+        <Animated.View
+          entering={FadeInUp.delay(600)}
+          style={styles.boardWrapper}
+        >
+          <View
+            style={[
+              styles.board,
+              {
+                borderColor: colors.border,
+                shadowColor: colors.shadow,
+                width: boardSize,
+                height: boardSize,
+              },
+            ]}
+          >
+            {board.map((value, index) => (
+              <Cell
+                key={index}
+                index={index}
+                value={value}
+                onPress={handleCellPress}
+                isWinning={winningCombination.includes(index)}
+              />
+            ))}
+          </View>
+        </Animated.View>
+
+        {winner && (
+          <Animated.View
+            entering={FadeInUp.delay(800)} // Ensure this has a distinct animation
+            style={styles.winnerContainer}
+          >
+            <AnimatedTouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor: colors.card,
+                  borderColor: colors.border,
+                  shadowColor: colors.shadow,
+                },
+              ]}
+              onPress={resetGame}
+            >
+              <RotateCcw size={24} color={colors.text} />
+              <Text style={[styles.buttonText, { color: colors.text }]}>
+                Play Again
+              </Text>
+            </AnimatedTouchableOpacity>
+          </Animated.View>
+        )}
+        <BannerAdComponent />
+      </Animated.View>
+    </>
   );
 }
 

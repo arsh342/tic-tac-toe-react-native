@@ -16,6 +16,7 @@ import Animated, {
   FadeInLeft,
 } from 'react-native-reanimated';
 import { User as Users1, UserPlus as Users2 } from 'lucide-react-native';
+import BannerAdComponent from '../../components/BannerAdComponent';
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -38,149 +39,161 @@ export default function Home() {
   );
 
   return (
-    <Animated.View
-      entering={FadeIn}
-      style={[
-        styles.container,
-        { backgroundColor: colors.background },
-        isLandscape && styles.containerLandscape,
-      ]}
-    >
-      <Animated.Text
-        entering={FadeInUp.delay(200)}
+    <>
+      <Animated.View
+        entering={FadeIn}
         style={[
-          styles.title,
-          { color: colors.text },
-          isLandscape && styles.titleLandscape,
+          styles.container,
+          { backgroundColor: colors.background },
+          isLandscape && styles.containerLandscape,
         ]}
       >
-        Tic Tac Toe
-      </Animated.Text>
-
-      <View style={{ width: '100%', maxWidth: 400, gap: 24, marginTop: 24 }}>
-        <Link href="/game" asChild>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={{
-              backgroundColor: colors.card,
-              borderRadius: 30,
-              borderWidth: 2.5,
-              borderColor: colors.border,
-              paddingVertical: 22,
-              paddingHorizontal: 18,
-              marginBottom: 12,
-              flexDirection: 'row',
-              alignItems: 'center',
-              shadowColor: colors.shadow,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.12,
-              shadowRadius: 16,
-              elevation: 6,
-            }}
-            onPress={() => handleModeSelect('single')}
-          >
-            <View
+        <Animated.Text
+          entering={FadeInUp.delay(200)}
+          style={[
+            styles.title,
+            { color: colors.text },
+            isLandscape && styles.titleLandscape,
+          ]}
+        >
+          Tic Tac Toe
+        </Animated.Text>
+        <View style={{ width: '100%', maxWidth: 400, gap: 24, marginTop: 24 }}>
+          <Link href="/game" asChild>
+            <TouchableOpacity
+              activeOpacity={0.85}
               style={{
+                backgroundColor: colors.card,
+                borderRadius: 30,
+                borderWidth: 2.5,
+                borderColor: colors.border,
+                paddingVertical: 22,
+                paddingHorizontal: 18,
+                marginBottom: 12,
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
+                shadowColor: colors.shadow,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.12,
+                shadowRadius: 16,
+                elevation: 6,
               }}
+              onPress={() => handleModeSelect('single')}
             >
-              <Users1
-                size={40}
-                color={colors.text}
-                style={{ marginRight: 18 }}
-              />
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Text
-                  style={{
-                    fontFamily: 'SpaceGrotesk-Bold',
-                    fontSize: 22,
-                    color: colors.text,
-                    marginBottom: 2,
-                    textAlign: 'center',
-                  }}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                }}
+              >
+                <Users1
+                  size={40}
+                  color={colors.text}
+                  style={{ marginRight: 18 }}
+                />
+                <View
+                  style={{ alignItems: 'center', justifyContent: 'center' }}
                 >
-                  Single Player
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: 'SpaceGrotesk-Regular',
-                    fontSize: 15,
-                    color: colors.text,
-                    opacity: 0.7,
-                    textAlign: 'center',
-                  }}
-                >
-                  Play against AI
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'SpaceGrotesk-Bold',
+                      fontSize: 22,
+                      color: colors.text,
+                      marginBottom: 2,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Single Player
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'SpaceGrotesk-Regular',
+                      fontSize: 15,
+                      color: colors.text,
+                      opacity: 0.7,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Play against AI
+                  </Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        </Link>
-        <Link href="/game" asChild>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={{
-              backgroundColor: colors.card,
-              borderRadius: 30,
-              borderWidth: 2.5,
-              borderColor: colors.border,
-              paddingVertical: 22,
-              paddingHorizontal: 18,
-              flexDirection: 'row',
-              alignItems: 'center',
-              shadowColor: colors.shadow,
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.12,
-              shadowRadius: 16,
-              elevation: 6,
-            }}
-            onPress={() => handleModeSelect('multi')}
-          >
-            <View
+            </TouchableOpacity>
+          </Link>
+          <Link href="/game" asChild>
+            <TouchableOpacity
+              activeOpacity={0.85}
               style={{
+                backgroundColor: colors.card,
+                borderRadius: 30,
+                borderWidth: 2.5,
+                borderColor: colors.border,
+                paddingVertical: 22,
+                paddingHorizontal: 18,
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
+                shadowColor: colors.shadow,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.12,
+                shadowRadius: 16,
+                elevation: 6,
               }}
+              onPress={() => handleModeSelect('multi')}
             >
-              <Users2
-                size={40}
-                color={colors.text}
-                style={{ marginRight: 18 }}
-              />
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Text
-                  style={{
-                    fontFamily: 'SpaceGrotesk-Bold',
-                    fontSize: 22,
-                    color: colors.text,
-                    marginBottom: 2,
-                    textAlign: 'center',
-                  }}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                }}
+              >
+                <Users2
+                  size={40}
+                  color={colors.text}
+                  style={{ marginRight: 18 }}
+                />
+                <View
+                  style={{ alignItems: 'center', justifyContent: 'center' }}
                 >
-                  Two Players
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: 'SpaceGrotesk-Regular',
-                    fontSize: 15,
-                    color: colors.text,
-                    opacity: 0.7,
-                    textAlign: 'center',
-                  }}
-                >
-                  Play with a friend
-                </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'SpaceGrotesk-Bold',
+                      fontSize: 22,
+                      color: colors.text,
+                      marginBottom: 2,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Two Players
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'SpaceGrotesk-Regular',
+                      fontSize: 15,
+                      color: colors.text,
+                      opacity: 0.7,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Play with a friend
+                  </Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        </Link>
-      </View>
-    </Animated.View>
+            </TouchableOpacity>
+          </Link>
+        </View>
+        {/* Place BannerAdComponent below the main content with bottom padding */}
+        <View style={{ paddingTop: 100 }}>
+          <BannerAdComponent />
+        </View>
+        <View style={{ paddingTop: 100 }}>
+          <BannerAdComponent />
+        </View>
+      </Animated.View>
+    </>
   );
 }
 

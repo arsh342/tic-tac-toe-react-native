@@ -8,6 +8,7 @@ import Animated, {
 import { 
   Trash2,
 } from 'lucide-react-native';
+import BannerAdComponent from '../../components/BannerAdComponent';
 
 export default function Settings() {
   const { difficulty, setDifficulty, resetScores, soundEnabled, toggleSound, playerChoice, setPlayerChoice, playerXName, setPlayerXName, playerOName, setPlayerOName } = useGameStore();
@@ -38,8 +39,9 @@ export default function Settings() {
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
-
-
+<View style={{ paddingBottom: 20 }}>
+          <BannerAdComponent />
+        </View>
         {/* Theme Section */}
         <View style={[styles.section, { 
           backgroundColor: colors.card,
@@ -207,6 +209,9 @@ export default function Settings() {
             />
           </View>
         </View>
+        <View style={{ paddingBottom: 20 }}>
+          <BannerAdComponent />
+        </View>
 
         {/* Reset Scores Button */}
         <TouchableOpacity 
@@ -220,7 +225,6 @@ export default function Settings() {
           <Trash2 size={24} color={colors.text} />
           <Text style={[styles.resetButtonText, { color: colors.text }]}>Reset Scores</Text>
         </TouchableOpacity>
-
 
     </Animated.View>
     </ScrollView>
