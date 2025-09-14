@@ -258,7 +258,7 @@ export default function Leaderboard() {
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
         extraData={expandedIndices}
-        contentContainerStyle={{ paddingBottom: 80 }}
+        contentContainerStyle={{ paddingBottom: 100 }}
       />
     </Animated.View>
   );

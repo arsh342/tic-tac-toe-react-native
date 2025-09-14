@@ -292,7 +292,11 @@ export default function Game() {
               />
             ))}
           </View>
+          <View style={{ paddingTop: 40 }}>
+            <BannerAdComponent />
+          </View>
         </Animated.View>
+        
 
         {winner && (
           <Animated.View
@@ -317,7 +321,6 @@ export default function Game() {
             </AnimatedTouchableOpacity>
           </Animated.View>
         )}
-        <BannerAdComponent />
       </Animated.View>
     </>
   );

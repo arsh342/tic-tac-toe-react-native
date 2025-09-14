@@ -6,6 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
+    "assets": [
+      "./assets/images/icon.png",
+      "./assets/images/favicon.png"
+    ],
     "android": {
       "package": "com.boltexpo.tictactoe",
       "versionCode": 15,
