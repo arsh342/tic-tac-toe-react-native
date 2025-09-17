@@ -235,12 +235,12 @@ export default function Leaderboard() {
   const renderHeader = () => (
     <>
       <Text style={[styles.title, { color: colors.text }]}>Leaderboard</Text>
-      <View style={{ paddingBottom: 20 }}>
-          <BannerAdComponent />
-        </View>
+      
       {renderScores()}
       {/* Banner Ad below scores */}
-      <BannerAdComponent />
+      <View style={{ paddingBottom: 10}}>
+          <BannerAdComponent />
+        </View>
 
     </>
   );

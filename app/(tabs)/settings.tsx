@@ -39,9 +39,6 @@ export default function Settings() {
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
-<View style={{ paddingBottom: 20 }}>
-          <BannerAdComponent />
-        </View>
         {/* Theme Section */}
         <View style={[styles.section, { 
           backgroundColor: colors.card,

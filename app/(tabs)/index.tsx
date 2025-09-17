@@ -48,9 +48,6 @@ export default function Home() {
           isLandscape && styles.containerLandscape,
         ]}
       >
-        <View style={{ paddingBottom: 50 }}>
-          <BannerAdComponent />
-        </View>
         <Animated.Text
           entering={FadeInUp.delay(200)}
           style={[
