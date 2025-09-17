@@ -234,13 +234,14 @@ export default function Leaderboard() {
 
   const renderHeader = () => (
     <>
+    {/* Banner Ad below scores */}
+      <View style={{ marginTop: 60}}>
+          <BannerAdComponent />
+        </View>
       <Text style={[styles.title, { color: colors.text }]}>Leaderboard</Text>
       
       {renderScores()}
-      {/* Banner Ad below scores */}
-      <View style={{ paddingBottom: 10}}>
-          <BannerAdComponent />
-        </View>
+      <Text style={[styles.title, { color: colors.text}]}>History</Text>
 
     </>
   );
@@ -255,7 +256,6 @@ export default function Leaderboard() {
         renderItem={renderHistoryItem}
         keyExtractor={(_, index) => index.toString()}
         ListHeaderComponent={renderHeader}
-        style={styles.flatList}
         showsVerticalScrollIndicator={false}
         extraData={expandedIndices}
         contentContainerStyle={{ paddingBottom: 100 }}
@@ -273,24 +273,22 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 0,
     paddingTop: 0,
-    paddingBottom: 0,
-  },
-  flatList: {
-    flex: 1,
+    paddingBottom: 30,
   },
   title: {
     fontFamily: 'SpaceGrotesk-Bold',
     fontSize: 32,
-    marginTop: 60,
+    marginTop: 20,
     marginBottom: 20,
     textAlign: 'center',
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 10,
     borderRadius: 30,
     padding: 15,
+    paddingBottom: 2,
     borderWidth: 3,
     borderColor: '#263238',
     shadowOffset: {
@@ -298,7 +296,7 @@ const styles = StyleSheet.create({
       height: 4,
     },
     shadowOpacity: 1,
-    shadowRadius: 0,
+    shadowRadius: 4,
   },
   sectionTitle: {
     fontFamily: 'SpaceGrotesk-Bold',
@@ -307,7 +305,7 @@ const styles = StyleSheet.create({
   },
   card: {
     marginBottom: 15,
-    borderRadius: 30,
+    borderRadius: 20,
     borderWidth: 3,
     borderColor: '#263238',
     overflow: 'hidden',

@@ -45,7 +45,6 @@ export default function Home() {
         style={[
           styles.container,
           { backgroundColor: colors.background },
-          isLandscape && styles.containerLandscape,
         ]}
       >
         <Animated.Text
@@ -53,7 +52,6 @@ export default function Home() {
           style={[
             styles.title,
             { color: colors.text },
-            isLandscape && styles.titleLandscape,
           ]}
         >
           Tic Tac Toe
@@ -68,8 +66,8 @@ export default function Home() {
                 borderWidth: 2.5,
                 borderColor: colors.border,
                 paddingVertical: 22,
-                paddingHorizontal: 18,
-                marginBottom: 12,
+                paddingHorizontal: 20,
+                marginBottom: 0,
                 flexDirection: 'row',
                 alignItems: 'center',
                 shadowColor: colors.shadow,
@@ -91,7 +89,7 @@ export default function Home() {
                 <Users1
                   size={40}
                   color={colors.text}
-                  style={{ marginRight: 18 }}
+                  style={{ marginRight: 20 }}
                 />
                 <View
                   style={{ alignItems: 'center', justifyContent: 'center' }}
@@ -131,7 +129,7 @@ export default function Home() {
                 borderWidth: 2.5,
                 borderColor: colors.border,
                 paddingVertical: 22,
-                paddingHorizontal: 18,
+                paddingHorizontal: 20,
                 flexDirection: 'row',
                 alignItems: 'center',
                 shadowColor: colors.shadow,
@@ -199,30 +197,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 0,
   },
   title: {
     fontFamily: 'SpaceGrotesk-Bold',
     fontSize: 48,
     marginBottom: 40,
     transform: [{ rotate: '1deg' }],
-  },
-  containerLandscape: {
-    // Add landscape-specific styles here
-  },
-  titleLandscape: {
-    // Add landscape-specific styles here
-  },
-  buttonsContainerLandscape: {
-    // Add landscape-specific styles here
-  },
-  buttonLandscape: {
-    // Add landscape-specific styles here
-  },
-  buttonTextLandscape: {
-    // Add landscape-specific styles here
-  },
-  buttonSubtextLandscape: {
-    // Add landscape-specific styles here
   },
 });

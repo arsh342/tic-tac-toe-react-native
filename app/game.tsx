@@ -23,7 +23,6 @@ import Animated, {
 import { RotateCcw, ArrowLeft, Undo2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BannerAdComponent from '../components/BannerAdComponent';
-import NativeAdComponent from '../components/NativeAdComponent';
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -143,15 +142,6 @@ export default function Game() {
 
   const isLandscape = width > height;
 
-  const boardSize = useMemo(() => {
-    // Calculate available space for the board
-    const availableWidth = width - (insets.left + insets.right + 40); // 40 for horizontal padding
-    const availableHeight = height - (insets.top + insets.bottom + 200); // 200 for header, status, and log
-
-    const maxBoardDimension = Math.min(availableWidth, availableHeight);
-    return Math.min(maxBoardDimension, 300); // Cap at 300px for larger screens to ensure it doesn't get too big
-  }, [width, height, insets]);
-
   const winningCombination = useMemo(() => {
     if (!winner || winner === 'draw') return [];
     return (
@@ -168,13 +158,20 @@ export default function Game() {
     if (winner === 'draw') return "It's a draw!";
     if (winner) {
       if (mode === 'single') {
-        return `${winner === playerChoice ? playerXName : 'AI'} wins!`;
+        return `${winner === playerChoice ? 'You' : 'AI'} win${
+          winner === playerChoice ? '' : 's'
+        }!`;
       }
       return `${winner === 'X' ? playerXName : playerOName} wins!`;
     }
-    if (isAIThinking) return 'AI is thinking...';
+    if (isAIThinking) return "AI's turn";
     if (mode === 'single') {
-      return `${currentPlayer === playerChoice ? playerXName : 'AI'}'s turn`;
+      // Show 'Your turn' if it's the player's turn, otherwise 'AI's turn'
+      if (currentPlayer === playerChoice) {
+        return 'Your turn';
+      } else {
+        return "AI's turn";
+      }
     }
     return `${currentPlayer === 'X' ? playerXName : playerOName}'s turn`;
   }, [
@@ -214,8 +211,8 @@ export default function Game() {
             backgroundColor: colors.background,
             paddingTop: insets.top + 20,
             paddingBottom: insets.bottom + 20,
-            paddingLeft: insets.left + 20,
-            paddingRight: insets.right + 20,
+            paddingHorizontal: 20,
+            gap: 40,
           },
           isLandscape && styles.containerLandscape,
         ]}
@@ -271,14 +268,15 @@ export default function Game() {
           entering={FadeInUp.delay(600)}
           style={styles.boardWrapper}
         >
-          <View
+          <Animated.View
+            entering={FadeInUp.delay(700)}
             style={[
               styles.board,
               {
                 borderColor: colors.border,
                 shadowColor: colors.shadow,
-                width: boardSize,
-                height: boardSize,
+                width: '100%',
+                aspectRatio: 1,
               },
             ]}
           >
@@ -291,12 +289,8 @@ export default function Game() {
                 isWinning={winningCombination.includes(index)}
               />
             ))}
-          </View>
-          <View style={{ paddingTop: 40 }}>
-            <BannerAdComponent />
-          </View>
+          </Animated.View>
         </Animated.View>
-        
 
         {winner && (
           <Animated.View
@@ -321,6 +315,9 @@ export default function Game() {
             </AnimatedTouchableOpacity>
           </Animated.View>
         )}
+        <View style={{ paddingBottom: 10, marginLeft: -20 }}>
+          <BannerAdComponent />
+        </View>
       </Animated.View>
     </>
   );
@@ -357,7 +354,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // Removed fixed paddingTop
   },
   containerLandscape: {
     flexDirection: 'row',
@@ -387,11 +383,11 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 18,
+    fontSize: 20,
   },
   status: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 32,
+    fontSize: 42,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -399,15 +395,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 0,
   },
   board: {
-    // Dynamic width and height applied inline
     aspectRatio: 1, // Maintain aspect ratio
     flexDirection: 'row',
     flexWrap: 'wrap',
-    borderWidth: 0,
-    borderRadius: 0,
     overflow: 'hidden',
   },
   cellTouchable: {
@@ -419,8 +412,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 4,
-    borderRadius: 16,
-    margin: 4,
+    borderRadius: 20,
+    margin: 8,
     ...Platform.select({
       web: {
         cursor: 'pointer',
@@ -434,11 +427,11 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 1,
-    shadowRadius: 0,
+    shadowRadius: 20,
   },
   cellText: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 48,
+    fontSize: 64,
   },
   winnerContainer: {
     alignItems: 'center',

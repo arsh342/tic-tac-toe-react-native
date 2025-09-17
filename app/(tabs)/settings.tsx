@@ -38,6 +38,9 @@ export default function Settings() {
       entering={FadeIn}
       style={[styles.container, { backgroundColor: colors.background }]}
     >
+      <View style={{paddingBottom: 20 }}>
+          <BannerAdComponent />
+        </View>
       <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
         {/* Theme Section */}
         <View style={[styles.section, { 
@@ -206,9 +209,6 @@ export default function Settings() {
             />
           </View>
         </View>
-        <View style={{ paddingBottom: 20 }}>
-          <BannerAdComponent />
-        </View>
 
         {/* Reset Scores Button */}
         <TouchableOpacity 
@@ -231,9 +231,9 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 0,
     paddingTop: 60,
-    paddingBottom: 100,
+    paddingBottom: 140,
     alignItems: 'center',
   },
    scrollViewContent:{
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 20,
     borderRadius: 30,
-    padding: 20,
+    padding: 15,
     borderWidth: 3,
     width: '100%',
     ...Platform.select({
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   },
    sectionDescription: {
     fontFamily: 'SpaceGrotesk-Regular',
-    fontSize: 14,
+    fontSize: 18,
     marginBottom: 15,
   },
   rowContainer:{
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   },
   themeButtonText: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 16,
+    fontSize: 18,
   },
   soundContainer: {
     flexDirection: 'row',
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   },
   soundButtonText: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 16,
+    fontSize: 18,
   },
    slider: {
     flex:1,
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
    },
    soundPercentage:{
      fontFamily: 'SpaceGrotesk-Bold',
-     fontSize: 16,
+     fontSize: 18,
    },
   difficultyButtons: {
     flexDirection: 'row',
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   },
   difficultyButtonText: {
     fontFamily: 'SpaceGrotesk-Bold',
-    fontSize: 16,
+    fontSize: 18,
   },
   resetButton: {
     flexDirection: 'row',
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
    },
    playerChoiceButtonText: {
      fontFamily: 'SpaceGrotesk-Bold',
-     fontSize: 16,
+     fontSize: 18,
    },
    nameInputContainer: {
      width: '100%',
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
    },
    nameInputLabel: {
      fontFamily: 'SpaceGrotesk-Medium',
-     fontSize: 16,
+     fontSize: 18,
      marginBottom: 5,
    },
    nameInput: {
@@ -467,7 +467,7 @@ const styles = StyleSheet.create({
      borderRadius: 20,
      paddingVertical: 10,
      paddingHorizontal: 15,
-     fontSize: 16,
+     fontSize: 18,
      fontFamily: 'SpaceGrotesk-Regular',
    },
 });

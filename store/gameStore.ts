@@ -446,7 +446,36 @@ export const useGameStore = create<GameState>((set, get) => {
         storageHelpers.saveSoundEnabled(newState.soundEnabled);
         return newState;
       }),
-    setPlayerChoice: (choice) => set({ playerChoice: choice }),
+    setPlayerChoice: (choice) => {
+      set((state) => {
+        // If in singleplayer, player selects 'O', and board is empty, let AI make the first move
+        if (
+          state.mode === 'single' &&
+          choice === 'O' &&
+          state.board.every((cell) => cell === null)
+        ) {
+          const newBoard = [...INITIAL_BOARD];
+          const newMoveHistory: Move[] = [];
+          const aiMoveIndex = gameHelpers.getAIMove(newBoard, state.difficulty);
+          if (aiMoveIndex !== -1) {
+            newBoard[aiMoveIndex] = 'X';
+            newMoveHistory.push({
+              player: 'X',
+              position: aiMoveIndex,
+              timestamp: Date.now(),
+            });
+          }
+          return {
+            playerChoice: choice,
+            board: newBoard,
+            moveHistory: newMoveHistory,
+            currentPlayer: 'O',
+            winner: null,
+          };
+        }
+        return { playerChoice: choice };
+      });
+    },
     setPlayerXName: (name) => {
       set({ playerXName: name });
       storageHelpers.saveNames(name, get().playerOName);
@@ -608,11 +637,34 @@ export const useGameStore = create<GameState>((set, get) => {
       });
     },
     resetGame: () => {
-      set({
-        board: [...INITIAL_BOARD],
-        currentPlayer: get().playerChoice,
-        winner: null,
-        moveHistory: [],
+      set((state) => {
+        // If singleplayer and player is 'O', AI should play first after reset
+        if (state.mode === 'single' && state.playerChoice === 'O') {
+          const newBoard = [...INITIAL_BOARD];
+          const newMoveHistory: Move[] = [];
+          const aiMoveIndex = gameHelpers.getAIMove(newBoard, state.difficulty);
+          if (aiMoveIndex !== -1) {
+            newBoard[aiMoveIndex] = 'X';
+            newMoveHistory.push({
+              player: 'X',
+              position: aiMoveIndex,
+              timestamp: Date.now(),
+            });
+          }
+          return {
+            board: newBoard,
+            currentPlayer: 'O',
+            winner: null,
+            moveHistory: newMoveHistory,
+          };
+        }
+        // Default reset
+        return {
+          board: [...INITIAL_BOARD],
+          currentPlayer: state.playerChoice,
+          winner: null,
+          moveHistory: [],
+        };
       });
     },
     resetScores: () => {
